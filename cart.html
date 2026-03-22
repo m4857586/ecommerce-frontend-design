@@ -3,21 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Cart</title>
-  <link rel="stylesheet" href="style.css">
+  <title>My Cart | Furniro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>Shopping Cart</h1>
-    <a href="index.html">Continue Shopping</a>
-    <span id="cartCount"> Your Cart 🛒 (0)</span>
-  </header>
+  
+  <header class="header">
+  <div class="container nav">
+    <h2 class="logo">Furniro</h2>
 
-  <!-- Cart Items -->
-<main class="cart-container container">
+   <ul class="menu">
+    <li><a href="index.html" style="text-decoration: none; color: black;"><i class="fa fa-home"></i> Home</a></li>
+  <li><i class="fa fa-store"></i> Shop</li>
+  <li><i class="fa fa-info-circle"></i> About</li>
+  <li><i class="fa fa-envelope"></i> Contact</li>
+</ul>
+<div class="icons">
+  <span>Search 🔍</span>
+  <span onclick="location.href='cart.html'" style="cursor:pointer;">
+  Your Cart 🛒 <span id="cartCount">(0)</span>
+</span>
+</div>
+  </div>
+</header>
+  
+  <main class="cart-container container">
     <div class="cart-layout">
-        
         <div class="cart-main">
             <div class="cart-header-labels">
                 <span>Product</span>
@@ -26,30 +38,28 @@
                 <span>Subtotal</span>
                 <span></span>
             </div>
-            <div id="cartContainer">
-                </div>
+            <div id="cartContainer"></div>
         </div>
 
         <div class="cart-summary-card">
             <h2>Cart Totals</h2>
             <div class="summary-line">
                 <span>Subtotal</span>
-                <span class="sub-price">$<span id="cartTotal">0.00</span></span>
+                <span>$<span id="cartTotal">0.00</span></span>
             </div>
             <div class="summary-line total-line">
                 <span>Total</span>
-                <span class="final-price">$<span id="cartTotalFinal">0.00</span></span>
+                <span style="color: #B88E2F; font-weight: bold;">$<span id="cartTotalFinal">0.00</span></span>
             </div>
             <button id="checkoutBtn" class="checkout-button">Check Out</button>
         </div>
-        
     </div>
-</main>
-  <!-- FOOTER -->
-<footer class="footer">
-  <p>© 2026 Furniro. All rights reserved.</p>
-</footer>
+  </main>
 
-<script src="js/script.js"></script>
+  <footer class="footer" style="text-align:center; padding: 20px;">
+    <p>© 2026 Furniro. All rights reserved.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
 </body>
 </html>

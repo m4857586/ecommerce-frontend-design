@@ -85,83 +85,105 @@ const productData = {
     }
 };
 
-// --- 1. CORE DATA LOGIC ---
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || [];
-}
-
-function saveCart(cart) {
+const getCart = () => JSON.parse(localStorage.getItem("cart")) || [];
+const saveCart = (cart) => {
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartCount();
-}
+};
 
 function updateCartCount() {
     const cart = getCart();
-    const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const cartElement = document.getElementById("cartCount");
-    if (cartElement) {
-        cartElement.innerText = `Cart 🛒 (${totalQty})`;
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const el = document.getElementById("cartCount");
+    if (el) el.innerText = `(${count})`;
+}
+function showToast(message) {
+    let toast = document.querySelector(".toast-notification");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.className = "toast-notification";
+        document.body.appendChild(toast);
     }
+    toast.innerText = message;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
-// --- 2. ACTIONS ---
+// Update your existing addToCart function to use the toast:
 function addToCart(name, price, image) {
     let cart = getCart();
-    const existing = cart.find(item => item.name === name);
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({ name, price, image, quantity: 1 });
-    }
+    const existing = cart.find(i => i.name === name);
+    if (existing) { existing.quantity += 1; } 
+    else { cart.push({ name, price, image, quantity: 1 }); }
     saveCart(cart);
-    alert(`${name} added to cart!`); // Simple replacement for toast if toast CSS is missing
+    
+    showToast(name + " added to cart!"); // Calls the toast instead of alert
 }
 
-// --- 3. THE RENDERER (Furniro Style) ---
+function loadProductDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("product");
+    
+    // productData must be defined at the top of your script.js
+    const product = productData[productId];
+
+    if (product) {
+        document.querySelector(".product-info h1").innerText = product.name;
+        document.querySelector(".price").innerText = `$${product.price}`;
+        document.querySelector(".description").innerText = product.description;
+        document.querySelector(".product-image img").src = product.image;
+        const featuresList = document.querySelector(".features");
+            if (featuresList && product.features) {
+                featuresList.innerHTML = ""; // clear old features
+
+        product.features.forEach(feature => {
+         const li = document.createElement("li");
+         li.innerText = feature;
+         featuresList.appendChild(li);
+    });
+}
+    }
+}
+
 function renderCartPage() {
     const container = document.getElementById("cartContainer");
-    const totalElement = document.getElementById("cartTotal");
-    const totalFinalElement = document.getElementById("cartTotalFinal");
-    
+    const subtotalEl = document.getElementById("cartTotal");
+    const totalEl = document.getElementById("cartTotalFinal");
     if (!container) return;
+
     const cart = getCart();
     container.innerHTML = "";
     let total = 0;
 
     if (cart.length === 0) {
-        container.innerHTML = "<div class='empty-msg'>Your cart is currently empty.</div>";
-        if(totalElement) totalElement.innerText = "0.00";
-        if(totalFinalElement) totalFinalElement.innerText = "0.00";
+        container.innerHTML = "<p style='padding:20px;'>Your cart is empty.</p>";
+        if (subtotalEl) subtotalEl.innerText = "0.00";
+        if (totalEl) totalEl.innerText = "0.00";
         return;
     }
 
     cart.forEach((item, index) => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-
+        const itemSubtotal = item.price * item.quantity;
+        total += itemSubtotal;
         const div = document.createElement("div");
-        div.className = "cart-item"; // Matches your Grid CSS
+        div.className = "cart-item";
         div.innerHTML = `
-            <div class="product-col" style="display:flex; align-items:center;">
-                <img src="${item.image}" alt="${item.name}">
-                <h3 style="margin-left:15px; color:#9F9F9F;">${item.name}</h3>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <img src="${item.image}" style="width:70px; height:70px; object-fit:cover; border-radius:8px;">
+                <span style="color:#9F9F9F;">${item.name}</span>
             </div>
-            <p style="color: #9F9F9F;">$${item.price.toFixed(2)}</p>
-            <input type="number" value="${item.quantity}" min="1" 
-                   onchange="window.updateQty(${index}, this.value)">
-            <p>$${itemTotal.toFixed(2)}</p>
-            <button class="remove-btn" onclick="window.removeItem(${index})">
-                <i class="fa fa-trash"></i> Delete
-            </button>
+            <p>$${item.price.toFixed(2)}</p>
+            <input type="number" value="${item.quantity}" min="1" onchange="window.updateQty(${index}, this.value)" style="width:45px; padding:5px;">
+            <p>$${itemSubtotal.toFixed(2)}</p>
+            <i class="fa fa-trash" onclick="window.removeItem(${index})" style="color:#B88E2F; cursor:pointer;"></i>
         `;
         container.appendChild(div);
     });
 
-    if(totalElement) totalElement.innerText = total.toFixed(2);
-    if(totalFinalElement) totalFinalElement.innerText = total.toFixed(2);
+    if (subtotalEl) subtotalEl.innerText = total.toFixed(2);
+    if (totalEl) totalEl.innerText = total.toFixed(2);
 }
 
-// --- 4. GLOBAL FUNCTIONS ---
 window.updateQty = (index, qty) => {
     let cart = getCart();
     cart[index].quantity = Math.max(1, parseInt(qty));
@@ -176,36 +198,24 @@ window.removeItem = (index) => {
     renderCartPage();
 };
 
-// --- 5. INITIALIZATION ---
 document.addEventListener("DOMContentLoaded", () => {
     updateCartCount();
+    loadProductDetails();
 
-    // Universal Add to Cart Listener
     document.addEventListener("click", (e) => {
         const btn = e.target.closest(".add-to-cart");
         if (!btn) return;
 
         let name, price, image;
-        // Detail Page Logic
-        if (btn.id === "addToCart" || window.location.search.includes("product=")) {
-            name = document.querySelector(".product-info h1")?.innerText;
-            price = parseFloat(document.querySelector(".price")?.innerText.replace("$", ""));
-            image = document.querySelector(".product-image img")?.src;
-        } 
-        // Home Page Logic
-        else {
-            const card = btn.closest(".product-card") || btn.closest(".hero-box");
-            name = card?.querySelector("h3")?.innerText;
-            price = parseFloat(card?.querySelector(".price")?.innerText.replace("$", ""));
-            image = card?.querySelector("img")?.src;
-        }
+        const card = btn.closest(".product-info") || btn.closest(".product-card") || btn.closest(".hero-box") || document.body;
+        
+        name = card.querySelector("h1, h3")?.innerText;
+        const priceText = card.querySelector(".price")?.innerText || "0";
+        price = parseFloat(priceText.replace(/[^0-9.]/g, ""));
+        image = card.querySelector("img")?.src;
 
-        if (name && !isNaN(price)) {
-            addToCart(name, price, image);
-        }
+        if (name && !isNaN(price)) addToCart(name, price, image);
     });
 
-    if (document.getElementById("cartContainer")) {
-        renderCartPage();
-    }
+    if (document.getElementById("cartContainer")) renderCartPage();
 });

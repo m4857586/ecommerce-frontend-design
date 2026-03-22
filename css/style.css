@@ -313,23 +313,110 @@ select {
   margin-top: 30px;
 }
 
-/* Toast Notification */
-.toast-notification {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #333;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 8px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s, transform 0.5s;
-  z-index: 9999;
-  font-family: sans-serif;
+/* --- CART PAGE FIXATIONS --- */
+#cartContainer .cart-item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr; /* Matches your header labels */
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
 }
 
+#cartContainer .cart-item img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #F9F1E7;
+}
+
+#cartContainer .cart-item input {
+    width: 50px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #b88e2f;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.empty-msg {
+    padding: 50px;
+    text-align: center;
+    font-size: 18px;
+    color: #9F9F9F;
+}
+
+/* Layout for the Cart Totals Card */
+.cart-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.cart-header-labels {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1fr 0.5fr;
+    background-color: #FAF3EA;
+    padding: 15px;
+    font-weight: 600;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 1fr 1fr 0.5fr;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-summary-card {
+    background-color: #FAF3EA;
+    padding: 30px;
+    border-radius: 4px;
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.checkout-button {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #B88E2F;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 5px;
+    display: none;
+    z-index: 10000;
+}
 .toast-notification.show {
-  opacity: 1;
-  transform: translateY(0);
+    display: block;
+    animation: fadeInOut 3s forwards;
+}
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
 }
