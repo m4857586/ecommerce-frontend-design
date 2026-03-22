@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Cart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>Shopping Cart</h1>
+    <a href="index.html">Continue Shopping</a>
+    <span id="cartCount"> Your Cart 🛒 (0)</span>
+  </header>
+
+  <!-- Cart Items -->
+<main class="cart-container container">
+    <div class="cart-layout">
+        
+        <div class="cart-main">
+            <div class="cart-header-labels">
+                <span>Product</span>
+                <span>Price</span>
+                <span>Quantity</span>
+                <span>Subtotal</span>
+                <span></span>
+            </div>
+            <div id="cartContainer">
+                </div>
+        </div>
+
+        <div class="cart-summary-card">
+            <h2>Cart Totals</h2>
+            <div class="summary-line">
+                <span>Subtotal</span>
+                <span class="sub-price">$<span id="cartTotal">0.00</span></span>
+            </div>
+            <div class="summary-line total-line">
+                <span>Total</span>
+                <span class="final-price">$<span id="cartTotalFinal">0.00</span></span>
+            </div>
+            <button id="checkoutBtn" class="checkout-button">Check Out</button>
+        </div>
+        
+    </div>
+</main>
+  <!-- FOOTER -->
+<footer class="footer">
+  <p>© 2026 Furniro. All rights reserved.</p>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
